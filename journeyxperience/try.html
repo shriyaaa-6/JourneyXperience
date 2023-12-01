@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('images/bg_1.jpg'); /* Replace with your background image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .item {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .item:hover {
+            background-color: #2980b9;
+        }
+
+        .found {
+            background-color: #27ae60;
+        }
+
+        #score {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        #timer {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+    <title>Scavenger Hunt Game</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Scavenger Hunt!</h1>
+        <p>Find the following items:</p>
+        <div id="scavengerHunt">
+            <!-- Buttons representing each item -->
+            <button class="item" onclick="checkItem('Key')">Key</button>
+            <button class="item" onclick="checkItem('Map')">Map</button>
+            <button class="item" onclick="checkItem('Flashlight')">Flashlight</button>
+            <button class="item" onclick="checkItem('Compass')">Compass</button>
+            <button class="item" onclick="checkItem('Notebook')">Notebook</button>
+        </div>
+        <div id="score">Score: <span id="scoreValue">0</span></div>
+        <div id="timer">Time Left: <span id="timerValue">60</span> seconds</div>
+    </div>
+
+    <script>
+        let score = 0;
+        let timer = 60;
+        let timerInterval;
+
+        function checkItem(item) {
+            const itemButton = document.querySelector(`button:contains('${item}')`);
+
+            if (itemButton.classList.contains('found')) {
+                alert(`You already found ${item}!`);
+            } else {
+                itemButton.classList.add('found');
+                score++;
+                document.getElementById('scoreValue').textContent = score;
+                alert(`Good job! You found ${item}. Your score is now ${score}.`);
+            }
+
+            // Check if all items are found
+            const allFound = document.querySelectorAll('.item').length === document.querySelectorAll('.found').length;
+            if (allFound) {
+                alert(`Congratulations! You found all the items. Your final score is ${score}.`);
+                resetGame();
+            }
+        }
+
+        function updateTimer() {
+            document.getElementById('timerValue').textContent = timer;
+
+            if (timer === 0) {
+                clearInterval(timerInterval);
+                alert(`Time's up! Your final score is ${score}.`);
+                resetGame();
+            } else {
+                timer--;
+            }
+        }
+
+        function resetGame() {
+            // Reset score, timer, and item states
+            score = 0;
+            timer = 60;
+            document.getElementById('scoreValue').textContent = score;
+            document.getElementById('timerValue').textContent = timer;
+
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                item.classList.remove('found');
+            });
+
+            // Restart the timer
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Start the timer when the page loads
+        timerInterval = setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>

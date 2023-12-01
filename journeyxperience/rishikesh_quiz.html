@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Rishikesh Trivia Quiz</title>
+  <style>
+    /* CSS styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ADD8E6;
+    }
+
+    .quiz-container {
+       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/r1.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+ h1 {
+      font-family: 'Roboto', sans-serif; /* Change the font here */
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .question-box {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      margin-bottom: 20px;
+  font-size: 24px;
+    }
+
+    .options button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .options button:hover {
+      background-color: #0056b3;
+    }
+
+    .quiz-completed {
+      display: none;
+      background-color: #ADD8E6;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .coupon-code {
+      margin-top: 40px;
+      font-size: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Rishikesh Trivia Quiz</h1>
+  <div class="question-box" id="question"></div>
+  <div class="options"></div>
+  <p id="score"></p>
+</div>
+
+<div class="quiz-completed" id="quizCompleted">
+  <p id="quizCompletedText"></p>
+  <p id="scoreDisplay"></p>
+  <p class="coupon-code" id="couponCode" style="display: none;"></p>
+</div>
+
+<script>
+  const questions = [
+  {
+    question: "What is the other name for Rishikesh?",
+    options: ["Divine City", "Yoga Capital of the World", "River City", "Spiritual Haven"],
+    answer: "Yoga Capital of the World"
+  },
+  {
+    question: "Which river flows through Rishikesh?",
+    options: ["Ganges", "Yamuna", "Brahmaputra", "Godavari"],
+    answer: "Ganges"
+  },
+  {
+    question: "What is the famous suspension bridge in Rishikesh called?",
+    options: ["Ram Jhula", "Laxman Jhula", "Sita Jhula", "Krishna Jhula"],
+    answer: "Laxman Jhula"
+  },
+  {
+    question: "Which activity is Rishikesh most famous for?",
+    options: ["Trekking", "Bungee Jumping", "Rafting", "Paragliding"],
+    answer: "Rafting"
+  },
+  {
+    question: "Rishikesh is often referred to as the gateway to which famous pilgrimage site?",
+    options: ["Kedarnath", "Vaishno Devi", "Badrinath", "Amarnath"],
+    answer: "Badrinath"
+  },
+  {
+    question: "Which ancient sage is believed to have meditated in Rishikesh?",
+    options: ["Maharishi Markandeya", "Maharishi Vishwamitra", "Maharishi Agastya", "Maharishi Mahesh Yogi"],
+    answer: "Maharishi Vishwamitra"
+  },
+  {
+    question: "What is the famous evening ceremony performed at the banks of River Ganges in Rishikesh?",
+    options: ["Ganga Aarti", "Ganga Snan", "Ganga Pooja", "Ganga Yagya"],
+    answer: "Ganga Aarti"
+  },
+  {
+    question: "Which Beatles band member visited Rishikesh for spiritual guidance?",
+    options: ["John Lennon", "Paul McCartney", "George Harrison", "Ringo Starr"],
+    answer: "George Harrison"
+  },
+  {
+    question: "Rishikesh is located in which Indian state?",
+    options: ["Uttarakhand", "Himachal Pradesh", "Uttar Pradesh", "Rajasthan"],
+    answer: "Uttarakhand"
+  },
+  {
+    question: "Which mountain range is in close proximity to Rishikesh?",
+    options: ["Himalayas", "Western Ghats", "Aravalli Range", "Vindhya Range"],
+    answer: "Himalayas"
+  }
+  // Add more questions following the same format
+];
+
+
+  let questionIndex = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.querySelector('.options');
+    const currentQuestion = questions[questionIndex];
+
+    questionElement.innerText = currentQuestion.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selectedOption) {
+    const currentQuestion = questions[questionIndex];
+    if (selectedOption === currentQuestion.answer) {
+      score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.querySelector('.quiz-container');
+    const quizCompleted = document.getElementById('quizCompleted');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    quizCompleted.style.display = 'block';
+    scoreDisplay.innerText = `Your Score: ${score} out of ${questions.length}`;
+
+    if (score === questions.length) {
+      const couponCode = generateCouponCode();
+      const couponCodeElement = document.getElementById('couponCode');
+      couponCodeElement.innerText = `Your 15% discount coupon code: ${couponCode}`;
+      couponCodeElement.style.display = 'block';
+    }
+  }
+
+  function generateCouponCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let couponCode = '';
+    for (let i = 0; i < 8; i++) {
+      couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return couponCode;
+  }
+
+  displayQuestion();
+</script>
+
+</body>
+</html>

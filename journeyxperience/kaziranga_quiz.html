@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> KazirangaNatinalPark Trivia Quiz</title>
+  <style>
+    /* CSS styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #FED8B1;
+    }
+
+    .quiz-container {
+       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/k1.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+ h1 {
+      font-family: 'Roboto', sans-serif; /* Change the font here */
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .question-box {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      margin-bottom: 20px;
+  font-size: 24px;
+    }
+
+    .options button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #FED8B1;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .options button:hover {
+      background-color: #0056b3;
+    }
+
+    .quiz-completed {
+      display: none;
+      background-color: #FED8B1;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .coupon-code {
+      margin-top: 40px;
+      font-size: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>KazirangaNationalPark Trivia Quiz</h1>
+  <div class="question-box" id="question"></div>
+  <div class="options"></div>
+  <p id="score"></p>
+</div>
+
+<div class="quiz-completed" id="quizCompleted">
+  <p id="quizCompletedText"></p>
+  <p id="scoreDisplay"></p>
+  <p class="coupon-code" id="couponCode" style="display: none;"></p>
+</div>
+
+<script>
+  const questions = [
+  {
+    question: "In which Indian state is Kaziranga National Park located?",
+    options: ["Assam", "Madhya Pradesh", "Rajasthan", "Uttarakhand"],
+    answer: "Assam"
+  },
+  {
+    question: "Which iconic species is found in abundance in Kaziranga National Park?",
+    options: ["Bengal Tiger", "Indian Elephant", "One-horned Rhinoceros", "Snow Leopard"],
+    answer: "One-horned Rhinoceros"
+  },
+  {
+    question: "What is the name of the river that flows through Kaziranga National Park?",
+    options: ["Brahmaputra", "Ganges", "Yamuna", "Godavari"],
+    answer: "Brahmaputra"
+  },
+  {
+    question: "Kaziranga National Park is a UNESCO World Heritage Site primarily known for protecting which species?",
+    options: ["Tigers", "Lions", "Rhinos", "Leopards"],
+    answer: "Rhinos"
+  },
+  {
+    question: "What is the habitat type of Kaziranga National Park?",
+    options: ["Mangrove Forest", "Tropical Rainforest", "Grasslands and Wetlands", "Desert"],
+    answer: "Grasslands and Wetlands"
+  },
+  {
+    question: "Which time of the year is the best for wildlife viewing in Kaziranga National Park?",
+    options: ["Winter", "Monsoon", "Spring", "Summer"],
+    answer: "Winter"
+  },
+  {
+    question: "What is the name of the anti-poaching task force in Kaziranga National Park known for its successful conservation efforts?",
+    options: ["Rhino Force", "Tiger Task Force", "Forest Rangers", "Kaziranga Guardians"],
+    answer: "Forest Rangers"
+  },
+  {
+    question: "Which ethnic group inhabits the areas around Kaziranga National Park and has a strong cultural association with the park?",
+    options: ["Gond", "Bodo", "Santhal", "Garo"],
+    answer: "Bodo"
+  },
+  {
+    question: "What is the approximate total area covered by Kaziranga National Park?",
+    options: ["200 square kilometers", "500 square kilometers", "1000 square kilometers", "1500 square kilometers"],
+    answer: "500 square kilometers"
+  },
+  {
+    question: "Kaziranga National Park is home to diverse birdlife. What is the estimated number of bird species found in the park?",
+    options: ["Over 300", "Around 100", "Less than 50", "Approximately 200"],
+    answer: "Over 300"
+  }
+  // Add more questions following the same format
+];
+
+  let questionIndex = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.querySelector('.options');
+    const currentQuestion = questions[questionIndex];
+
+    questionElement.innerText = currentQuestion.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selectedOption) {
+    const currentQuestion = questions[questionIndex];
+    if (selectedOption === currentQuestion.answer) {
+      score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.querySelector('.quiz-container');
+    const quizCompleted = document.getElementById('quizCompleted');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    quizCompleted.style.display = 'block';
+    scoreDisplay.innerText = `Your Score: ${score} out of ${questions.length}`;
+
+    if (score === questions.length) {
+      const couponCode = generateCouponCode();
+      const couponCodeElement = document.getElementById('couponCode');
+      couponCodeElement.innerText = `Your 15% discount coupon code: ${couponCode}`;
+      couponCodeElement.style.display = 'block';
+    }
+  }
+
+  function generateCouponCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let couponCode = '';
+    for (let i = 0; i < 8; i++) {
+      couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return couponCode;
+  }
+
+  displayQuestion();
+</script>
+
+</body>
+</html>

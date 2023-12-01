@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mysore Palace Trivia Quiz</title>
+  <style>
+    /* CSS styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #FFD700;
+    }
+
+    .quiz-container {
+       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/m1.jpeg');
+      background-size: cover;
+      background-position: center;
+      color: #EAC117;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+h1 {
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 180px;
+    }
+
+    .question-box {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      margin-bottom: 20px;
+  font-size: 24px;
+    }
+
+    .options button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .options button:hover {
+      background-color: #0056b3;
+    }
+
+    .quiz-completed {
+      display: none;
+      background-color: #800000;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .coupon-code {
+      margin-top: 40px;
+      font-size: 80px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Mysore Palace Trivia Quiz</h1>
+  <div class="question-box" id="question"></div>
+  <div class="options"></div>
+  <p id="score"></p>
+</div>
+
+<div class="quiz-completed" id="quizCompleted">
+  <p id="quizCompletedText"></p>
+  <p id="scoreDisplay"></p>
+  <p class="coupon-code" id="couponCode" style="display: none;"></p>
+</div>
+
+<script>
+  const questions = [
+    // Your questions array here
+ {
+    question: "Where is Mysore Palace located?",
+    options: ["Tamil Nadu", "Karnataka", "Kerala", "Andhra Pradesh"],
+    answer: "Karnataka"
+  },
+  {
+    question: "Who was the architect of Mysore Palace?",
+    options: ["Sir Visvesvaraya", "Sir M. Vishweshwaraiah", "Henry Irwin", "Robert Fellowes Chisholm"],
+    answer: "Henry Irwin"
+  },
+  {
+    question: "In which style was the Mysore Palace built?",
+    options: ["Rococo", "Neoclassical", "Indo-Saracenic", "Baroque"],
+    answer: "Indo-Saracenic"
+  },
+  {
+    question: "Which Wadiyar king commissioned the construction of the present Mysore Palace?",
+    options: ["Tipu Sultan", "Raja Wadiyar", "Krishnaraja Wadiyar IV", "Chamaraja Wadiyar X"],
+    answer: "Krishnaraja Wadiyar IV"
+  },
+  {
+    question: "Which festival is celebrated with grandeur at Mysore Palace?",
+    options: ["Diwali", "Dussehra", "Holi", "Eid"],
+    answer: "Dussehra"
+  },
+  {
+    question: "What is the material used predominantly in the construction of Mysore Palace?",
+    options: ["Wood", "Granite", "Marble", "Sandstone"],
+    answer: "Granite"
+  },
+  {
+    question: "Which room inside the palace is known for its intricate glass ceilings?",
+    options: ["Amba Vilasa", "Kalyana Mantapa", "Public Durbar Hall", "Private Durbar Hall"],
+    answer: "Kalyana Mantapa"
+  },
+  {
+    question: "What was the previous palace, 'Old Fort', made of before the construction of the present palace?",
+    options: ["Bricks", "Wood", "Stone", "Mud"],
+    answer: "Wood"
+  },
+  {
+    question: "Which year was the Mysore Palace open to the public?",
+    options: ["1912", "1927", "1950", "1974"],
+    answer: "1912"
+  },
+  {
+    question: "Which feature of Mysore Palace is illuminated on Sundays and public holidays?",
+    options: ["Entire Palace", "Courtyard", "Gopuram", "Kalyana Mantapa"],
+    answer: "Entire Palace"
+  },
+  ];
+
+  let questionIndex = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.querySelector('.options');
+    const currentQuestion = questions[questionIndex];
+
+    questionElement.innerText = currentQuestion.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selectedOption) {
+    const currentQuestion = questions[questionIndex];
+    if (selectedOption === currentQuestion.answer) {
+      score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.querySelector('.quiz-container');
+    const quizCompleted = document.getElementById('quizCompleted');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    quizCompleted.style.display = 'block';
+    scoreDisplay.innerText = `Your Score: ${score} out of ${questions.length}`;
+
+    if (score === questions.length) {
+      const couponCode = generateCouponCode();
+      const couponCodeElement = document.getElementById('couponCode');
+      couponCodeElement.innerText = `Your 15% discount coupon code: ${couponCode}`;
+      couponCodeElement.style.display = 'block';
+    }
+  }
+
+  function generateCouponCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let couponCode = '';
+    for (let i = 0; i < 8; i++) {
+      couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return couponCode;
+  }
+
+  displayQuestion();
+</script>
+
+</body>
+</html>
