@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mysore Palace Scavenger Hunt</title>
+  <style>
+    /* CSS styles for the game */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('images/mysore.jpg'); /* Replace with your background image URL */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #game-box {
+      max-width: 600px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .location {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .location:hover {
+      background-color: #f9f9f9;
+    }
+
+    .visited {
+      background-color: #d9edf7;
+      pointer-events: none;
+    }
+
+    #found-items {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #location-info {
+      margin-top: 20px;
+    }
+
+    .hint {
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    #upload-input {
+      display: none;
+    }
+
+    #timer {
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-box">
+    <h1 style="text-align: center;">Mysore Palace Scavenger Hunt</h1>
+    <div id="found-items">Found Items: <span id="item-count">0</span></div>
+    
+    <div class="location" id="entrance" onclick="explore('Entrance Gate')">
+      Explore Entrance Gate
+      <div class="hint">(Hint: The main entrance to the palace)</div>
+    </div>
+    <div class="location" id="throne-room" onclick="explore('Throne Room')">
+      Explore Throne Room
+      <div class="hint">(Hint: Where the royal throne is situated)</div>
+    </div>
+    <div class="location" id="art-gallery" onclick="explore('Art Gallery')">
+      Explore Art Gallery
+      <div class="hint">(Hint: Houses a collection of royal artifacts)</div>
+    </div>
+
+    <div id="location-info"></div>
+
+    <input type="file" id="upload-input" accept="image/*" onchange="handleImageUpload(event)">
+    <button onclick="openImageUploader()">Upload Image</button>
+
+    <div id="timer">Time Left: <span id="timer-value"></span></div>
+  </div>
+
+  <script>
+    const foundItems = new Set();
+    const itemCountElement = document.getElementById('item-count');
+    const timerElement = document.getElementById('timer-value');
+    let timeLeft = 600; // Set time limit to 600 seconds (10 minutes)
+    let imageUploaded = false;
+
+    const countdown = setInterval(() => {
+      if (timeLeft <= 0 || foundItems.size === 3) {
+        clearInterval(countdown);
+        handleGameCompletion();
+      } else {
+        timerElement.innerText = formatTime(timeLeft);
+        timeLeft--;
+      }
+    }, 1000);
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function explore(place) {
+      var locationInfo = document.getElementById('location-info');
+      locationInfo.innerHTML = '';
+
+      const locationElement = document.getElementById(place.toLowerCase().replace(' ', '-'));
+
+      if (imageUploaded) {
+        if (!foundItems.has(place)) {
+          switch(place) {
+            case 'Entrance Gate':
+              locationInfo.innerHTML = '<h2>Entrance Gate</h2><p>The main entrance to the Mysore Palace.</p>';
+              break;
+            case 'Throne Room':
+              locationInfo.innerHTML = '<h2>Throne Room</h2><p>Where the royal throne is situated.</p>';
+              break;
+            case 'Art Gallery':
+              locationInfo.innerHTML = '<h2>Art Gallery</h2><p>Houses a collection of royal artifacts and artworks.</p>';
+              break;
+            default:
+              break;
+          }
+          foundItems.add(place);
+          itemCountElement.innerText = foundItems.size;
+        } else {
+          locationInfo.innerHTML = `<p>You have already explored the ${place}!</p>`;
+        }
+        locationElement.classList.add('visited');
+      } else {
+        alert('Please upload an image to proceed!');
+      }
+    }
+
+    function openImageUploader() {
+      const uploadInput = document.getElementById('upload-input');
+      uploadInput.click();
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        imageUploaded = true;
+        alert(`Image uploaded: ${file.name}`);
+      }
+    }
+
+    function handleGameCompletion() {
+      const gameContainer = document.getElementById('game-box');
+      if (foundItems.size === 3) {
+        gameContainer.innerHTML += '<div style="text-align: center; margin-top: 20px;"><h2>Congratulations!</h2><p>You found all places!</p></div>';
+      } else {
+        gameContainer.innerHTML += '<div style="text-align: center; margin-top: 20px;"><h2>Time\'s up!</h2><p>Game Over!</p></div>';
+      }
+    }
+  </script>
+</body>
+</html>

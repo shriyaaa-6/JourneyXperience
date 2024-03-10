@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Mahabalipuram Trivia Quiz</title>
+  <style>
+    /* CSS styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ADD8E6;
+    }
+
+    .quiz-container {
+       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/maha.jpeg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+h1 {
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 180px;
+    }
+
+    .question-box {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      margin-bottom: 20px;
+  font-size: 24px;
+    }
+
+    .options button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .options button:hover {
+      background-color: #0056b3;
+    }
+
+    .quiz-completed {
+      display: none;
+      background-color: #ADD8E6;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .coupon-code {
+      margin-top: 40px;
+      font-size: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Mahabalipuram Trivia Quiz</h1>
+  <div class="question-box" id="question"></div>
+  <div class="options"></div>
+  <p id="score"></p>
+</div>
+
+<div class="quiz-completed" id="quizCompleted">
+  <p id="quizCompletedText"></p>
+  <p id="scoreDisplay"></p>
+  <p class="coupon-code" id="couponCode" style="display: none;"></p>
+</div>
+
+<script>
+  const questions = [
+    {
+      question: "What is the ancient name of Mahabalipuram?",
+      options: ["Mamallapuram", "Kanchipuram", "Thanjavur", "Puducherry"],
+      answer: "Mamallapuram"
+    },
+    {
+      question: "Which Pallava king built the Shore Temple in Mahabalipuram?",
+      options: ["Narasimhavarman I", "Rajendra Chola", "Narasimhavarman II", "Mahendravarman I"],
+      answer: "Narasimhavarman II"
+    },
+    {
+      question: "What is the unique rock-cut structure in Mahabalipuram resembling a chariot?",
+      options: ["Ratha Temple", "Shore Temple", "Arjuna's Penance", "Krishna's Butterball"],
+      answer: "Ratha Temple"
+    },
+    {
+      question: "Which art form is predominantly seen in Mahabalipuram's stone sculptures?",
+      options: ["Kathakali", "Bharatanatyam", "Kuchipudi", "Mahabalipuram Dance"],
+      answer: "Bharatanatyam"
+    },
+    {
+      question: "What type of architecture is the Five Rathas complex in Mahabalipuram known for?",
+      options: ["Dravidian", "Nagara", "Vesara", "Indo-Islamic"],
+      answer: "Dravidian"
+    },
+    {
+      question: "Which UNESCO World Heritage Site designation year was conferred upon Mahabalipuram?",
+      options: ["1995", "1984", "2001", "2010"],
+      answer: "1984"
+    },
+    {
+      question: "What is the main material used for the creation of sculptures in Mahabalipuram?",
+      options: ["Granite", "Marble", "Sandstone", "Limestone"],
+      answer: "Granite"
+    },
+    {
+      question: "Which of these is NOT a famous attraction in Mahabalipuram?",
+      options: ["Varaha Cave Temple", "Krishna's Butterball", "Arjuna's Penance", "Meenakshi Amman Temple"],
+      answer: "Meenakshi Amman Temple"
+    },
+    {
+      question: "What is the popular seashore landmark in Mahabalipuram known for its unique shape?",
+      options: ["Arjuna's Penance", "Shore Temple", "Krishna's Butterball", "Mahishamardini Cave"],
+      answer: "Krishna's Butterball"
+    },
+    {
+      question: "Which festival attracts tourists to Mahabalipuram for its dance performances?",
+      options: ["Pongal", "Navratri", "Mahabalipuram Dance Fest", "Natyanjali Dance Festival"],
+      answer: "Natyanjali Dance Festival"
+    },
+  // Add more questions as needed
+];
+
+  let questionIndex = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.querySelector('.options');
+    const currentQuestion = questions[questionIndex];
+
+    questionElement.innerText = currentQuestion.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selectedOption) {
+    const currentQuestion = questions[questionIndex];
+    if (selectedOption === currentQuestion.answer) {
+      score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.querySelector('.quiz-container');
+    const quizCompleted = document.getElementById('quizCompleted');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    quizCompleted.style.display = 'block';
+    scoreDisplay.innerText = `Your Score: ${score} out of ${questions.length}`;
+
+    if (score === questions.length) {
+      const couponCode = generateCouponCode();
+      const couponCodeElement = document.getElementById('couponCode');
+      couponCodeElement.innerText = `Your 15% discount coupon code: ${couponCode}`;
+      couponCodeElement.style.display = 'block';
+    }
+  }
+
+  function generateCouponCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let couponCode = '';
+    for (let i = 0; i < 8; i++) {
+      couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return couponCode;
+  }
+
+  displayQuestion();
+</script>
+
+</body>
+</html>

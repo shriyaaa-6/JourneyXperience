@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Varnasi Trivia Quiz</title>
+  <style>
+    /* CSS styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #FED8B1;
+    }
+
+    .quiz-container {
+       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/v1.jpg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+ h1 {
+      font-family: 'Roboto', sans-serif; /* Change the font here */
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .question-box {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      margin-bottom: 20px;
+  font-size: 24px;
+    }
+
+    .options button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #800000;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .options button:hover {
+      background-color: #0056b3;
+    }
+
+    .quiz-completed {
+      display: none;
+      background-color: #FED8B1;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .coupon-code {
+      margin-top: 40px;
+      font-size: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Varnasi Trivia Quiz</h1>
+  <div class="question-box" id="question"></div>
+  <div class="options"></div>
+  <p id="score"></p>
+</div>
+
+<div class="quiz-completed" id="quizCompleted">
+  <p id="quizCompletedText"></p>
+  <p id="scoreDisplay"></p>
+  <p class="coupon-code" id="couponCode" style="display: none;"></p>
+</div>
+
+<script> const questions = [
+    {
+    question: "What is another name for Varanasi?",
+    options: ["Kashi", "Jaipur", "Pune", "Lucknow"],
+    answer: "Kashi"
+  },
+  {
+    question: "Which river flows through Varanasi?",
+    options: ["Yamuna", "Ganges", "Saraswati", "Godavari"],
+    answer: "Ganges"
+  },
+  {
+    question: "Varanasi is famous for its ghats. How many ghats are there along the Ganges in Varanasi?",
+    options: ["50", "80", "100", "120"],
+    answer: "80"
+  },
+  {
+    question: "Which famous poet-saint of the Bhakti movement spent a significant part of his life in Varanasi?",
+    options: ["Mirabai", "Kabir", "Tulsidas", "Surdas"],
+    answer: "Kabir"
+  },
+  {
+    question: "Which Hindu deity has a prominent temple in Varanasi dedicated to him/her?",
+    options: ["Vishnu", "Shiva", "Brahma", "Durga"],
+    answer: "Shiva"
+  },
+  {
+    question: "What is the name of the famous silk weaving industry in Varanasi?",
+    options: ["Kanchipuram Silk", "Pochampally Silk", "Banarasi Silk", "Patola Silk"],
+    answer: "Banarasi Silk"
+  },
+  {
+    question: "What festival is celebrated with great fervor in Varanasi, involving the lighting of lamps on the ghats?",
+    options: ["Diwali", "Holi", "Navratri", "Makar Sankranti"],
+    answer: "Diwali"
+  },
+  {
+    question: "Which Mughal Emperor had a significant impact on Varanasi's architecture and culture?",
+    options: ["Akbar", "Shah Jahan", "Aurangzeb", "Jahangir"],
+    answer: "Aurangzeb"
+  },
+  {
+    question: "What is the name of the famous university in Varanasi known for its study of Hindu philosophy and Sanskrit?",
+    options: ["Jawaharlal Nehru University", "Banaras Hindu University", "Aligarh Muslim University", "Delhi University"],
+    answer: "Banaras Hindu University"
+  },
+  {
+    question: "In which Indian state is Varanasi located?",
+    options: ["Bihar", "Uttar Pradesh", "Rajasthan", "Madhya Pradesh"],
+    answer: "Uttar Pradesh"
+  }
+];
+  
+  // Add more questions following the same format
+
+
+  let questionIndex = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.querySelector('.options');
+    const currentQuestion = questions[questionIndex];
+
+    questionElement.innerText = currentQuestion.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selectedOption) {
+    const currentQuestion = questions[questionIndex];
+    if (selectedOption === currentQuestion.answer) {
+      score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.querySelector('.quiz-container');
+    const quizCompleted = document.getElementById('quizCompleted');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    quizCompleted.style.display = 'block';
+    scoreDisplay.innerText = `Your Score: ${score} out of ${questions.length}`;
+
+    if (score === questions.length) {
+      const couponCode = generateCouponCode();
+      const couponCodeElement = document.getElementById('couponCode');
+      couponCodeElement.innerText = `Your 15% discount coupon code: ${couponCode}`;
+      couponCodeElement.style.display = 'block';
+    }
+  }
+
+  function generateCouponCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let couponCode = '';
+    for (let i = 0; i < 8; i++) {
+      couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return couponCode;
+  }
+
+  displayQuestion();
+</script>
+
+</body>
+</html>

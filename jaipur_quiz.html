@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> JaipurCity Trivia Quiz</title>
+  <style>
+    /* CSS styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #FAAFBA;
+    }
+
+    .quiz-container {
+       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('images/j1.jpeg');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+h1 {
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 180px;
+    }
+
+    .question-box {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      margin-bottom: 20px;
+  font-size: 24px;
+    }
+
+    .options button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .options button:hover {
+      background-color: #0056b3;
+    }
+
+    .quiz-completed {
+      display: none;
+      background-color: #FAAFBA;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .coupon-code {
+      margin-top: 40px;
+      font-size: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>JaipurCity Trivia Quiz</h1>
+  <div class="question-box" id="question"></div>
+  <div class="options"></div>
+  <p id="score"></p>
+</div>
+
+<div class="quiz-completed" id="quizCompleted">
+  <p id="quizCompletedText"></p>
+  <p id="scoreDisplay"></p>
+  <p class="coupon-code" id="couponCode" style="display: none;"></p>
+</div>
+
+<script>
+  const questions = [
+  {
+    question: "What is the nickname given to Jaipur?",
+    options: ["Golden City", "Blue City", "Pink City", "Green City"],
+    answer: "Pink City"
+  },
+  {
+    question: "Which iconic structure in Jaipur is known for its intricate architectural design?",
+    options: ["Hawa Mahal", "Amber Fort", "Jantar Mantar", "City Palace"],
+    answer: "Hawa Mahal"
+  },
+  {
+    question: "What is the name of the famous astronomical observatory in Jaipur?",
+    options: ["Jantar Mantar", "Sundial Observatory", "Solaris Astro Park", "Astronomy Point"],
+    answer: "Jantar Mantar"
+  },
+  {
+    question: "Which ruler laid the foundation of Jaipur?",
+    options: ["Maharaja Ranjit Singh", "Maharaja Jai Singh II", "Maharaja Sawai Pratap Singh", "Maharaja Bhanu Prakash"],
+    answer: "Maharaja Jai Singh II"
+  },
+  {
+    question: "Which is the oldest market in Jaipur and a popular tourist attraction?",
+    options: ["Bapu Bazaar", "Nehru Bazaar", "Johari Bazaar", "Chandpole Bazaar"],
+    answer: "Johari Bazaar"
+  },
+  {
+    question: "What is the name of the fort in Jaipur that is famous for its artistic style?",
+    options: ["Nahargarh Fort", "Jaigarh Fort", "Amber Fort", "Bhangarh Fort"],
+    answer: "Amber Fort"
+  },
+  {
+    question: "Which festival is celebrated with great enthusiasm and grandeur in Jaipur?",
+    options: ["Holi", "Diwali", "Gangaur", "Eid"],
+    answer: "Gangaur"
+  },
+  {
+    question: "What is the traditional Rajasthani sweet delicacy famous in Jaipur?",
+    options: ["Ghevar", "Rasgulla", "Jalebi", "Barfi"],
+    answer: "Ghevar"
+  },
+  {
+    question: "Which is the largest cannon on wheels in the world, located in Jaipur?",
+    options: ["Jaivana Cannon", "Vijaya Cannon", "Garbh Gunjam", "Maharajatana"],
+    answer: "Jaivana Cannon"
+  },
+  {
+    question: "Which famous Bollywood movie was shot in Jaipur showcasing the city's grandeur?",
+    options: ["Bajirao Mastani", "Padmaavat", "Jodhaa Akbar", "Veer"],
+    answer: "Padmaavat"
+  },
+  // Add more questions as needed
+];
+
+  let questionIndex = 0;
+  let score = 0;
+
+  function displayQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.querySelector('.options');
+    const currentQuestion = questions[questionIndex];
+
+    questionElement.innerText = currentQuestion.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestion.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selectedOption) {
+    const currentQuestion = questions[questionIndex];
+    if (selectedOption === currentQuestion.answer) {
+      score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex < questions.length) {
+      displayQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.querySelector('.quiz-container');
+    const quizCompleted = document.getElementById('quizCompleted');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    quizCompleted.style.display = 'block';
+    scoreDisplay.innerText = `Your Score: ${score} out of ${questions.length}`;
+
+    if (score === questions.length) {
+      const couponCode = generateCouponCode();
+      const couponCodeElement = document.getElementById('couponCode');
+      couponCodeElement.innerText = `Your 15% discount coupon code: ${couponCode}`;
+      couponCodeElement.style.display = 'block';
+    }
+  }
+
+  function generateCouponCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let couponCode = '';
+    for (let i = 0; i < 8; i++) {
+      couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return couponCode;
+  }
+
+  displayQuestion();
+</script>
+
+</body>
+</html>
